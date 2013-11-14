@@ -128,6 +128,47 @@ class mpl3115a2:
 	def setStepTime(self, step):
 		sensor.MPL3115A2_SetStepTime(step)
 
+	def getTemp(self):
+		t = self.readTemp()
+		t_m = (t >> 8) & 0xff;
+		t_l = t & 0xff;
+
+		if (t_l > 99):
+			t_l = t_l / 1000.0
+		else:
+			t_l = t_l / 100.0
+		return (t_m + t_l)
+
+	def getAlt(self):
+		alt = self.readAlt()
+		alt_m = alt >> 8 
+		alt_l = alt & 0xff
+		
+		if (alt_l > 99):
+			alt_l = alt_l / 1000.0
+		else:
+			alt_l = alt_l / 100.0
+			
+		return self.twosToInt(alt_m, 16) + alt_l
+	def getBar(self):
+		alt = self.readAlt()
+		alt_m = alt >> 6 
+		alt_l = alt & 0x03
+		
+		if (alt_l > 99):
+			alt_l = alt_l 
+		else:
+			alt_l = alt_l 
+
+		return (self.twosToInt(alt_m, 18))
+
+	def twosToInt(self, val, len):
+		# Convert twos compliment to integer
+		if(val & (1 << len - 1)):
+			val = val - (1<<len)
+
+		return val
+
 class mma8491q:
 	def __init__(self):
 		if (0 == sensor.bcm2835_init()):
@@ -183,13 +224,23 @@ default_bus = 1
 mag3110 = mag3110()
 mag3110.init()
 
+mpl = mpl3115a2()
+mpl.initAlt()
+#mpl.initBar()
+mpl.active()
+time.sleep(1)
+
 while True:
 	try:
 		heading = mag3110.getHeading()
 		url = 'http://127.0.0.1/sensors/compass.php?heading=%d' % heading
 		urllib.request.urlopen(url)
-		print(int(heading))
+		#print(int(heading))
 		#print(mag3110)
+		temper = mpl.getTemp()
+		#print (temper)
+		url = 'http://127.0.0.1/sensors/temper.php?temper=%f' % temper
+		urllib.request.urlopen(url)
 	except IOError as err:
 		print ('Error :', err.strerror)
 
