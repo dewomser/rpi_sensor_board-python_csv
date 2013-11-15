@@ -1,0 +1,92 @@
+
+<!-- saved from url=(0047)http://192.168.2.166/liaops/public/compass.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"> 
+ 
+<title>旋转图片</title> 
+</head> 
+
+<body> 
+<div id="container" style="width:482px;height:730px;position:relative;margin:0 auto">
+
+<div style="position:relative;">
+<!--1st img-->
+<img src="./旋转图片_files/background_compass.9.png" style="position:absolute;z-index:1;top:0px;left:0px">
+<div id="demo" style="position: absolute; z-index: 2; top: 213px; left: 95px; -webkit-transform: rotate(0deg);">
+<img src="./旋转图片_files/compass.png" width="290" height="290">
+</div>
+
+</div>
+</div>
+<script>
+var Img = function() {
+	var T$ = function(id) { return document.getElementById(id); }
+	var ua = navigator.userAgent,
+		isIE = /msie/i.test(ua) && !window.opera;
+	var i = 0, sinDeg = 0, cosDeg = 0, timer = null, j = 0;
+		var rotate = function(target, degree) {
+		target = T$(target);
+		var orginW = target.clientWidth, orginH = target.clientHeight;
+			clearInterval(timer);
+		function run(angle) {
+			if (isIE) { // IE
+				cosDeg = Math.cos(angle * Math.PI / 180);
+				sinDeg = Math.sin(angle * Math.PI / 180);
+				with(target.filters.item(0)) {
+					M11 = M22 = cosDeg; M12 = -(M21 = sinDeg); 
+				}
+				target.style.top = (orginH - target.offsetHeight) / 2 + 'px';
+				target.style.left = (orginW - target.offsetWidth) / 2 + 'px';
+			} else if (target.style.MozTransform !== undefined) {  // Mozilla
+				target.style.MozTransform = 'rotate(' + angle + 'deg)';
+			} else if (target.style.OTransform !== undefined) {   // Opera
+				target.style.OTransform = 'rotate(' + angle + 'deg)';
+			} else if (target.style.webkitTransform !== undefined) { // Chrome Safari
+				target.style.webkitTransform = 'rotate(' + angle + 'deg)';
+			} else {
+				target.style.transform = "rotate(" + angle + "deg)";
+			}
+		}
+		
+		timer = setInterval(function() {
+
+			if(j == 0){
+			i += 1;
+			if (i > degree - 1) {
+				clearInterval(timer);
+			} 
+			 i %= 360;
+			run(i);}
+			
+			else if(j == 1){
+			i += -1;
+			if (i < -degree + 1) {
+				clearInterval(timer);
+			} 	
+				 i %= 360;
+			run(i); 
+			}},1);
+			
+		}
+	
+	return {rotate: rotate}
+	
+
+}();
+window.onload = function() {
+    var sum = 0;
+	document.getElementById('demo').onclick = function() {
+        sum = 90;		
+		Img.rotate('demo', sum);}
+		
+	
+}
+</script>
+
+
+ 
+
+ 
+
+
+
+</body></html>
