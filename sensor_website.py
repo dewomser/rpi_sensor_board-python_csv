@@ -2,6 +2,7 @@
 import math
 import time
 import threading
+import queue
 import termios, fcntl, sys, os
 from ctypes import *
 #cdll.LoadLibrary("./bcm2835.so")
@@ -220,29 +221,50 @@ import time
 import urllib.request
 #from board_revision import revision
 
-default_bus = 1 
+def sensor_thread():
+	while True:
+		if (c == 1):
+			heading = mag3110.getHeading()
+			url = 'http://127.0.0.1/sensors/compass.php?heading=%d' % heading
+			urllib.request.urlopen(url)	
+		elif (c == 2):
+			temper = mpl.getTemp()
+			url = 'http://127.0.0.1/sensors/temper.php?temper=%f' % temper
+			urllib.request.urlopen(url)
+		elif (c == 3):
+			mma.init()
+			mma.enable()
+			(x, y, z) = mma.getAccelerometer()
+			mma.enable()
+			url = 'http://127.0.0.1/sensors/gsensor.php?x=%d&y=%d' %(x, y)
+			urllib.request.urlopen(url)
+			time.sleep(0.3)
+		else:
+			break
+		
+
+c = 1
 mag3110 = mag3110()
 mag3110.init()
-
 mpl = mpl3115a2()
 mpl.initAlt()
-#mpl.initBar()
 mpl.active()
 time.sleep(1)
+mma = mma8491q()
 
+t_sensor = threading.Thread(target=sensor_thread)
+t_sensor.start()
+
+print ("Input your choice for sensor\n 1. mag3110\n 2. mpl3115\n 3. mma8491\n 0. exit")
 while True:
-	try:
-		heading = mag3110.getHeading()
-		url = 'http://127.0.0.1/sensors/compass.php?heading=%d' % heading
-		urllib.request.urlopen(url)
-		#print(int(heading))
-		#print(mag3110)
-		temper = mpl.getTemp()
-		#print (temper)
-		url = 'http://127.0.0.1/sensors/temper.php?temper=%f' % temper
-		urllib.request.urlopen(url)
-	except IOError as err:
-		print ('Error :', err.strerror)
+	c = int(input("Your choice: "))
+	if (c == 0):
+		break
+
+
+	
+
+
 
 
 
