@@ -98,7 +98,7 @@ z = []
 
 q = Queue.Queue(0)
 q.put(1)
-print "\nCalibrate your mag3110 sensor, Now turn your sensor board around slowly\n"
+print "\nCalibrate your mag3110 sensor, Now horizontally rotate your board for 360 degrees\n"
 T = threading.Thread(target=calibrate_thread, args=(x, y, z))
 T.start()
 while 1:
@@ -115,3 +115,4 @@ f_cal.close()
 
 print "calibrated, now the new calibration data is:\n"
 print mag.x_off, mag.y_off, mag.z_off
+

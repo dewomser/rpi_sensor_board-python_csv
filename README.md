@@ -19,3 +19,14 @@
       1. sensor_website.py
         Read the sensor data and push it to website. The script
         is working in python3.x
+
+    Web pages
+      1. compass.html
+	This page display the mag3110 sensor data as a compass, you can turn the sensor board aroud, then the compass on the page will do the corresponding rotation.
+
+      2. temper.html
+	This page display the temperature value get from mpl3115 sensor, you will touch the sensor board, then the value will change correspondingly
+
+      3. gsensor.html
+	This page has a small car controled by the mma8491 sensor, you can turn the board up, down, left or right, the car will move as your board motion
+

@@ -260,6 +260,25 @@ while True:
 	c = int(input("Your choice: "))
 	if (c == 0):
 		break
+	elif (c == 1):
+		print ("=================================================================")
+		print ("mag3110 sensor data will upload to compass.html")
+		print ("Use browser to open http://<rpi IP>/sensors/compass.html")
+		print ("Horizontally rotate your board, you can see the compass rotation")
+		print ("=================================================================")
+	elif (c == 2):
+		print ("=================================================================")
+		print ("mpl3115 sensor data will upload to temper.html")
+		print ("Use browser to open http://<rpi IP>/sensors/temper.html")
+		print ("Touch your sensor board, you can see temperature value")
+		print ("=================================================================")
+	elif (c == 3):
+		print ("=================================================================")
+		print ("mma8491 sensor will upload to gsensor.html")
+		print ("Use browser to open http://<rpi IP>/sensors/gsensor.html")
+		print ("The small car on the web will be controled by the board.")
+		print ("Vertical and horizontal rotation will move the car correspondingly")
+		print ("=================================================================")
 
 
 	
