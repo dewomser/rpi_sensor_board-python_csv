@@ -31,7 +31,7 @@ function updateView()
 			document.getElementById("demo").innerHTML=cur;
             }
         }
-	xmlhttp.open("GET","temper.php",true);
+	xmlhttp.open("GET","temper.php?date="+ new Date().toTimeString(),true);
         xmlhttp.send();
     }, 10);
 }

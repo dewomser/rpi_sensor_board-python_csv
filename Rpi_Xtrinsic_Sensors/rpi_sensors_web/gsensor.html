@@ -59,7 +59,7 @@ function updateView()
                 carobj.style.top = j;
             }
         }
-        xmlhttp.open("GET","gsensor.php",true);
+        xmlhttp.open("GET","gsensor.php?date="+ new Date().toTimeString(),true);
         xmlhttp.send();
     }, 10); 
 }

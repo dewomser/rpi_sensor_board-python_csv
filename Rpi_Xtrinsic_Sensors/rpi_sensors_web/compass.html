@@ -3,22 +3,23 @@
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312"> 
 <title>compass</title> 
+<style type="text/css">
+#demo { cursor:pointer; position:absolute;filter:progid:DXImageTransform.Microsoft.Matrix(sizingmethod="auto expand");}
+</style>
 </head> 
 
 <body> 
-<div id="container">
+<div id="container" style="width:1050px;height:800px;position:relative;margin:0 auto; background:url(images/background_compass.png) no-repeat;">
 
-<div style="position:relative;">
-<!--1st img-->
-<img src="images/background_compass.png" style="position:absolute;z-index:1;top:0px;left:100px">
-<div id="demo" style="position: absolute; z-index: 2; top: 181px; left: 422px;">
-<img src="images/compass.png"/>
+<div style="width:414px;height:414px;top:200px;left:320px;position:absolute;argin:0 auto">
+	<div id = "demo">
+		<img src = "images/compass.png" width = "414" height = "414"/>
+	</div>
 </div>
-<div style="position: absolute; z-index: 3; top: 0px; left: 1000px;">
+<div style="position: absolute; z-index: 3; top: 0px; left: 900px;">
 <p id="data" style="font-size:48px; font-family:'Times New Roman', Times, serif; color:#FFF">0</p>
 </div>
 
-</div>
 </div>
 <script>
 var prev = 0;
@@ -79,6 +80,7 @@ function updateView()
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		cur = 0;
                 cur = parseInt(xmlhttp.responseText);
 		if (!isNaN(cur)) {
                 	Img.rotate('demo', cur);
@@ -90,7 +92,7 @@ function updateView()
 		}
             }
         }
-        xmlhttp.open("GET","compass.php",true);
+        xmlhttp.open("GET","compass.php?date="+ new Date().toTimeString(),true);
         xmlhttp.send();
     }, 10); 
 }

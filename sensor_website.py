@@ -235,7 +235,6 @@ def sensor_thread():
 			mma.init()
 			mma.enable()
 			(x, y, z) = mma.getAccelerometer()
-			mma.enable()
 			url = 'http://127.0.0.1/sensors/gsensor.php?x=%d&y=%d' %(x, y)
 			urllib.request.urlopen(url)
 			time.sleep(0.3)
