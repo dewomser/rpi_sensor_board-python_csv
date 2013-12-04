@@ -1,3 +1,7 @@
+#branch 
+    master: for demo
+    manufacturing: for manufacture test
+
 #rpi_sensor_board
     Driver: sensor.so -- all the sensor control API
     

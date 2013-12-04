@@ -5,9 +5,9 @@ import threading
 import queue
 import termios, fcntl, sys, os
 from ctypes import *
-#cdll.LoadLibrary("./bcm2835.so")
+#cdll.LoadLibrary("/home/pi/rpi_sensor_board/bcm2835.so")
 
-sensor = CDLL("./sensor.so")
+sensor = CDLL("/home/pi/rpi_sensor_board/sensor.so")
 
 class MMA8491Q_DATA(Structure):
 	_fields_  = [("Xout", c_int16),
@@ -224,25 +224,23 @@ import urllib.request
 def sensor_thread():
 	while True:
 		if (c == 1):
-			heading = mag3110.getHeading()
-			url = 'http://127.0.0.1/sensors/compass.php?heading=%d' % heading
-			urllib.request.urlopen(url)	
+                        (x, y, z) = mag3110.readAsInt()
+                        print ( "MAG3110:\tX.", x, "uT", "\tY.", y, "uT", "\tZ.", z, "uT")
+                        time.sleep(0.3)
 		elif (c == 2):
-			temper = mpl.getTemp()
-			url = 'http://127.0.0.1/sensors/temper.php?temper=%f' % temper
-			urllib.request.urlopen(url)
-		elif (c == 3):
-			mma.init()
-			mma.enable()
-			(x, y, z) = mma.getAccelerometer()
-			url = 'http://127.0.0.1/sensors/gsensor.php?x=%d&y=%d' %(x, y)
-			urllib.request.urlopen(url)
+			print ("MPL3115:", "\tAlt.", mpl.getAlt(), "\tTemp:", mpl.getTemp())
 			time.sleep(0.3)
-		else:
-			break
-		
+		elif (c == 3):
+                        mma.init()
+                        mma.enable()
+                        time.sleep(0.1)
+                        (x, y, z) = mma.getAccelerometer()
+                        print ("MMA8491Q:\tX.", x, "mg", "\tY.", y, "mg", "\tZ.", z, "mg")
+                        time.sleep(0.5)
+		elif (c == 0):
+                        break	
 
-c = 1
+c = 4
 mag3110 = mag3110()
 mag3110.init()
 mpl = mpl3115a2()
@@ -256,27 +254,20 @@ t_sensor.start()
 
 print ("Input your choice for sensor\n 1. mag3110\n 2. mpl3115\n 3. mma8491\n 0. exit")
 while True:
-	c = int(input("Your choice: "))
+	c = int(input(": "))
 	if (c == 0):
 		break
 	elif (c == 1):
 		print ("=================================================================")
-		print ("mag3110 sensor data will upload to compass.html")
-		print ("Use browser to open http://<rpi IP>/sensors/compass.html")
-		print ("Horizontally rotate your board, you can see the compass rotation")
+		print ("mag3110 sensor test")
 		print ("=================================================================")
 	elif (c == 2):
 		print ("=================================================================")
-		print ("mpl3115 sensor data will upload to temper.html")
-		print ("Use browser to open http://<rpi IP>/sensors/temper.html")
-		print ("Touch your sensor board, you can see temperature value")
+		print ("mpl3115 sensor test")
 		print ("=================================================================")
 	elif (c == 3):
 		print ("=================================================================")
-		print ("mma8491 sensor will upload to gsensor.html")
-		print ("Use browser to open http://<rpi IP>/sensors/gsensor.html")
-		print ("The small car on the web will be controled by the board.")
-		print ("Vertical and horizontal rotation will move the car correspondingly")
+		print ("mma8491 sensor test")
 		print ("=================================================================")
 
 
