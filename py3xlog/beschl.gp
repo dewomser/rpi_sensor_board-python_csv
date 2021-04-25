@@ -4,7 +4,7 @@
 # Requires data files "[123].dat" from this directory,
 
 set terminal png size 800,600 enhanced font "Helvetica,20"
-set output 'output.png'
+set output 'beschl.png'
 
 set grid
 set title 'xtrinsic mma8491q '
@@ -14,5 +14,5 @@ set ylabel 'x.y.z Achse'
 
 set auto x
 set datafile separator ','
-plot "newfile.csv" using 1:2 with lines title 'X-Achse',"newfile.csv" using 1:3 with lines title 'Y-Achse',"newfile.csv" using 1:4 with lines title 'Z-Achse'
+plot "bescl.csv" using 1:2 with lines title 'X-Achse',"beschl.csv" using 1:3 with lines title 'Y-Achse',"beschl.csv" using 1:4 with lines title 'Z-Achse'
 
