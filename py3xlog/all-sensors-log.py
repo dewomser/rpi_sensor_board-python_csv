@@ -254,7 +254,7 @@ while 1:
 #	print timexa,x,y,z
     #timexa += 1   
 	a = timexa, bar1, temp1
-	file1.write("%s,%s,%s\n" % a)
+	file3.write("%s,%s,%s\n" % a)
 #	printf ("%s,%s,%s\n" %a)
 	
 	
@@ -268,7 +268,7 @@ while 1:
 	#	print timexa,x,y,z
 	a = timexa, x, y, z
 
-	file2.write("%s,%s,%s,%s\n" % a)
+	file1.write("%s,%s,%s,%s\n" % a)
 #	printf ("%s,%s,%s,%s\n" %a)
 	
 	
@@ -278,7 +278,7 @@ while 1:
 	(x, y, z) = mxa.getAccelerometer()
 #	print timexa,x,y,z
 	a = timexa, x, y, z
-	file3.write("%s,%s,%s,%s\n" % a)
+	file2.write("%s,%s,%s,%s\n" % a)
 #	printf ("%s,%s,%s,%s\n" %a)
 	timexa += 1
 	mxa.enable()
