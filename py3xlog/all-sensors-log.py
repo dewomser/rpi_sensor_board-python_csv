@@ -4,8 +4,43 @@ import time
 import os
 from ctypes import *
 #cdll.LoadLibrary("./bcm2835.so")
+start = 0
 
-sensor = CDLL("./sensor.so")
+import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+def button_callback(channel):
+    print("Button Start was pushed!")
+    global start
+    start = 1
+def button_callback1(channel):
+    print("Button Stop was pushed!")
+    global start
+    start = 0
+
+
+
+
+GPIO.setwarnings(False) # Ignore warning for now
+GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.add_event_detect(19,GPIO.RISING,callback=button_callback1,bouncetime=200) # Setup event on pin 10 rising edge
+GPIO.add_event_detect(7,GPIO.RISING,callback=button_callback,bouncetime=200) # Setup event on pin 10 rising edge
+# message = input("Press enter to quit\n\n") # Run until someone presses enter#
+# GPIO.cleanup() # Clean up
+
+
+
+
+
+
+
+
+
+
+
+# sensor = CDLL("./sensor.so")
+
+sensor = CDLL("/home/pi/rpi_sensor_board_1/sensor.so")
 
 class mag3110:
 		
@@ -85,14 +120,15 @@ class mag3110:
 		self.y_off = (max_y + min_y) / 2 
 		self.z_off = 0 #(max_z + min_z) / 2
 		
-file1 = open("mag.csv", "w")		
+file1 = open("/home/pi/rpi_sensor_board_1/mag.csv", "w")		
 mag = mag3110()
 mag.init()
 
 
 #---------------------------------------------------------------------
 
-sensor = CDLL("./sensor.so")
+#sensor = CDLL("./sensor.so")
+sensor = CDLL("/home/pi/rpi_sensor_board_1/sensor.so")
 
 class MMA8491Q_DATA(Structure):
 	_fields_  = [("Xout", c_int16),
@@ -146,7 +182,7 @@ class mma8491q:
 		return val
 
 
-file2 = open("beschl.csv", "w")
+file2 = open("/home/pi/rpi_sensor_board_1/beschl.csv", "w")
 		
 mxa = mma8491q()
 mxa.init()
@@ -157,7 +193,8 @@ mxa.enable()
 
 
 
-sensor = CDLL("./sensor.so")
+#sensor = CDLL("./sensor.so")
+sensor = CDLL("/home/pi/rpi_sensor_board_1/sensor.so")
 
 class mpl3115a2:
 	def __init__(self):
@@ -235,14 +272,18 @@ class mpl3115a2:
 			val = val - (1<<len)
 
 		return val
-file3 = open("druck.csv", "w")		
+file3 = open("/home/pi/rpi_sensor_board_1/druck.csv", "w")		
+
 mpl = mpl3115a2()
 timexa = 0
 mpl.initAlt()
 mpl.initBar()
 mpl.active()
 time.sleep(1)
-while 1:
+while start == 0:
+	time.sleep(0.5)
+      
+while start:
 	
 #	print "MPL3115:","\tAlt:",mpl.getAlt(),"\tBar:",mpl.getBar(),"\tTemp:", mpl.getTemp()
 	
@@ -255,6 +296,8 @@ while 1:
     #timexa += 1   
 	a = timexa, bar1, temp1
 	file3.write("%s,%s,%s\n" % a)
+	file3.flush()
+
 #	printf ("%s,%s,%s\n" %a)
 	
 	
@@ -269,6 +312,8 @@ while 1:
 	a = timexa, x, y, z
 
 	file1.write("%s,%s,%s,%s\n" % a)
+	file1.flush()
+
 #	printf ("%s,%s,%s,%s\n" %a)
 	
 	
@@ -279,7 +324,16 @@ while 1:
 #	print timexa,x,y,z
 	a = timexa, x, y, z
 	file2.write("%s,%s,%s,%s\n" % a)
+	file2.flush()
+
 #	printf ("%s,%s,%s,%s\n" %a)
 	timexa += 1
 	mxa.enable()
 	time.sleep(0.5)
+
+file1.close()
+file2.close()
+file3.close()
+
+
+
